@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Aggregate Signatures for IoT (IBAS) — FYP</title>
+	<meta name="description" content="Identity-Based Aggregate Signatures (IBAS) for IoT: aggregate weather sensor signatures and verify them as one.">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/site.css">
+	<link rel="icon" href="images/favicon.png">
+</head>
+<body>
+	<header class="site-header">
+		<div class="container">
+			<a class="brand" href="#top">IBAS for IoT</a>
+			<nav class="nav" id="site-nav">
+				<a href="#problem">Problem</a>
+				<a href="#solution">Solution</a>
+				<a href="#how">How it works</a>
+				<a href="#demo">Demo Flow</a>
+				<a href="#api">API</a>
+				<a href="#contact" class="btn small">Get in touch</a>
+			</nav>
+			<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+		</div>
+	</header>
+
+	<main id="top">
+		<section class="hero" aria-labelledby="hero-title">
+			<div class="container hero-inner">
+				<div class="hero-copy">
+					<h1 id="hero-title">Identity‑Based Aggregate Signatures for IoT</h1>
+					<p class="lead">Securely aggregate and authenticate weather updates from many devices using Gentry’s IBAS scheme. Verify multiple signatures as one – reducing bandwidth and compute while preserving trust.</p>
+					<div class="cta">
+						<a class="btn primary" href="#demo">See the flow</a>
+						<a class="btn ghost" href="#api">Explore the API</a>
+					</div>
+				</div>
+				<div class="hero-graphic">
+					<div class="card metric"><span class="k">28</span><span class="label">sensors</span></div>
+					<div class="card metric"><span class="k">1</span><span class="label">aggregate signature</span></div>
+					<div class="card metric"><span class="k">92%</span><span class="label">less payload</span></div>
+				</div>
+			</div>
+		</section>
+
+		<section id="problem" class="section">
+			<div class="container two-col">
+				<div>
+					<h2>The problem</h2>
+					<p>IoT deployments stream frequent measurements from constrained devices. Traditional per‑message signatures bloat payloads and verification cost. Managing certificates is complex and ill‑suited to ad‑hoc device identity like MAC addresses or serial numbers.</p>
+				</div>
+				<div class="card">
+					<ul class="checks">
+						<li>High bandwidth overhead from individual signatures</li>
+						<li>Expensive verification at gateways/cloud</li>
+						<li>Certificate lifecycle complexity</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<section id="solution" class="section alt">
+			<div class="container two-col">
+				<div>
+					<h2>The solution: IBAS</h2>
+					<p>Gentry’s Identity‑Based Aggregate Signatures allow multiple signers to produce signatures that can be aggregated into a single compact value. In identity‑based crypto, a signer’s identifier (e.g., device MAC or serial) replaces certificates, simplifying deployment.</p>
+				</div>
+				<div class="card">
+					<ul class="checks">
+						<li>Aggregate many signatures into one</li>
+						<li>Verify once for all contributors</li>
+						<li>Use device identifiers directly</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<section id="how" class="section">
+			<div class="container">
+				<h2>How it works</h2>
+				<div class="steps">
+					<div class="step">
+						<h3>1. Setup</h3>
+						<p>A Private Key Generator (PKG) initializes public parameters and issues device private keys for identifiers.</p>
+					</div>
+					<div class="step">
+						<h3>2. Sign</h3>
+						<p>Each device signs its weather measurement with its identity‑based key.</p>
+					</div>
+					<div class="step">
+						<h3>3. Aggregate</h3>
+						<p>A gateway aggregates signatures from many devices into one compact signature.</p>
+					</div>
+					<div class="step">
+						<h3>4. Verify</h3>
+						<p>The server verifies a single aggregate signature against all identities and messages.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="demo" class="section alt">
+			<div class="container">
+				<h2>Demo flow</h2>
+				<ol class="flow">
+					<li>Simulate N devices posting temperature, humidity, pressure.</li>
+					<li>Aggregate signatures at the edge.</li>
+					<li>Transmit one payload with identities, messages, and the aggregate signature.</li>
+					<li>Verify once in the cloud; accept only authentic data.</li>
+				</ol>
+			</div>
+		</section>
+
+		<section id="api" class="section">
+			<div class="container">
+				<h2>API preview</h2>
+				<div class="code-grid">
+					<div class="code-card">
+						<h3>POST /sign</h3>
+						<pre><code>{
+  "deviceId": "pi-24:6a:91",
+  "message": "temp=22.6,hum=44,ts=1730812000"
+}</code></pre>
+					</div>
+					<div class="code-card">
+						<h3>POST /aggregate</h3>
+						<pre><code>{
+  "signatures": ["..."],
+  "identities": ["pi-24:6a:91", "pi-18:aa:02"],
+  "messages": ["temp=...", "temp=..."]
+}</code></pre>
+					</div>
+					<div class="code-card">
+						<h3>POST /verify</h3>
+						<pre><code>{
+  "aggregateSignature": "...",
+  "identities": ["..."],
+  "messages": ["..."]
+}</code></pre>
+					</div>
+				</div>
+				<p class="note">A full implementation integrates a pairing‑based library on the server and lightweight client bindings on devices like Raspberry Pi.</p>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer" id="contact">
+		<div class="container">
+			<div>
+				<strong>FYP: Aggregate Signatures for IoT</strong>
+				<p>Built to demonstrate Gentry’s IBAS applied to weather sensor updates.</p>
+			</div>
+			<div class="footer-links">
+				<a href="#api">API</a>
+				<a href="#how">How it works</a>
+				<a href="mailto:example@example.com">Email</a>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/site.js"></script>
+</body>
+</html>
+
+
